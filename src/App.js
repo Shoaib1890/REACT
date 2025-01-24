@@ -1,25 +1,75 @@
 import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react' ;
 
 function App() {
+  let [todolist,settodolist]=useState([])
+  
+
+  let saveToDoList=(event)=>{
+    let toname = event.target.toname.value ;
+    if(!todolist.includes(toname)){
+      let finalDolist=[...todolist,toname]
+      settodolist(finalDolist)
+
+    }
+    else{
+      alert("Todo name already exists")
+    }
+
+    
+  
+    event.preventDefault();
+  }
+
+  let list = todolist.map((value,index)=>{
+
+    return(
+      <ToDoListItems value={value} key={index} indexNumber={index} 
+        todolist={todolist}
+        settodolist={settodolist}
+      
+      
+      
+      />
+    )
+  })
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>ToDo List</h1>
+      <form onSubmit={saveToDoList}>
+         <input type='text' name='toname'/>
+         <button>save</button>
+      </form>
+
+    <div className='outerDiv'>
+      <ul>
+       {list}
+       
+      </ul>
+    </div>
+
+
+
     </div>
   );
 }
 
 export default App;
+
+function ToDoListItems({value,indexNumber,todolist,settodolist }){
+  
+  let [status,setStatus]=useState(false)
+  let deleteRow=()=>{
+    let finalData=todolist.filter((v,i)=>i!=indexNumber)
+    settodolist(finalData)
+  }
+  let checkStatus=()=>{
+    setStatus(!status)
+  }
+  return(
+    <li className={(status)? 'completetodo':''}   onClick={checkStatus}>{indexNumber+1} {value} <span onClick={deleteRow}>&times;</span></li>
+  )
+}
